@@ -674,12 +674,12 @@ YY_RULE_SETUP
 case 7:
 YY_RULE_SETUP
 #line 18 "cminus.l"
-{return ID;}
+{printf ("ID: %s\n",yytext); return ID;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
 #line 19 "cminus.l"
-{return NUM;}
+{printf ("NUM: %d\n",atoi(yytext)); return NUM;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP

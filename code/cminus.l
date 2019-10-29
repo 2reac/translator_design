@@ -15,8 +15,8 @@
 "void" 		{return VOID;}
 "while" 	{return WHILE;}
 
-[a-zA-Z][a-zA-Z0-9_]* {return ID;}
-[0-9]+		{return NUM;}
+[a-zA-Z][a-zA-Z0-9_]* {printf ("ID: %s\n",yytext); return ID;}
+[0-9]+		{printf ("NUM: %d\n",atoi(yytext)); return NUM;}
 
 "<="		{return Op_lessequal;}
 ">="		{return Op_greaterequal;}
