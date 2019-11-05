@@ -26,3 +26,4 @@
 #define Op_assign 26
 #define Semicolon 27
 #define Comma 28
+#define Eps 29
