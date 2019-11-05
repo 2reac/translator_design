@@ -98,4 +98,67 @@ statement : expression_stmt {printf("statement\n");}
 		  | iteration_stmt {printf("statement\n");}
 		  | return_stmt {printf("statement\n");}
 		  ;
-			 
+		  
+return_stmt : RETURN Semicolon {printf("return_stmt\n");}
+			| RETURN expression {printf("return_stmt\n");}
+			;
+			
+expression : var Op_equal expression {printf("expression\n");}
+		   | simple_expression {printf("expression\n");}
+		   ;
+		   
+var : ID {printf("var\n");}
+	| ID LeftBrack expression RightBrack {printf("var\n");}
+	;
+	
+simple_expression : additive_expression relop additive_expression {printf("simple_expression\n");}
+				  | additive_expression {printf("simple_expression\n");}
+				  ;
+				
+relop : Op_lessequal {printf("relop\n");}
+	  | Op_less {printf("relop\n");}
+	  | Op_greater {printf("relop\n");}
+	  | Op_greaterequal {printf("relop\n");}
+	  | Op_equal {printf("relop\n");}
+	  | Op_notequal {printf("relop\n");}
+	  ;
+
+additive_expression : additive_expression addop term {printf("additive_expression\n");}
+					| term {printf("additive_expression\n");}
+					;
+					
+addop : Op_add {printf("addop\n");}
+	  | Op_subtract {printf("addop\n");}
+	  ;
+	  
+term : term mulop factor {printf("term\n");}
+	 | factor {printf("term\n");}
+	 ;
+	 
+mulop : Op_multiply {printf("mulop\n");}
+	  | Op_divide {printf("mulop\n");}
+	  ;
+	  
+factor : LeftPrnts expression RightPrnts {printf("factor\n");}
+	   | var {printf("factor\n");}
+	   | call {printf("factor\n");}
+	   | NUM {printf("factor\n");}
+	   ;
+	   
+call : ID LeftPrnts args RightPrnts {printf("call\n");}
+	 ;
+	 
+args : args_list {printf("args\n");}
+	 | Eps {printf("args\n");}
+	 ;
+	 
+args_list : args_list Comma expression {printf("args_list\n");}
+		  | expression {printf("args_list\n");}
+		  ;
+	  
+%%
+
+%%
+#include <ctype.h>
+int main(void) { return yyparse(); }
+int yyerror(const char* s) { printf("%s\n", s); return 0; }
