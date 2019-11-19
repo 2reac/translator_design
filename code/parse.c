@@ -236,3 +236,309 @@ TreeNode * params(void)
 		t = param_list(type);
 	return t;
 }
+
+
+TreeNode * param_list(ExpType type)
+{
+	TreeNode * t = param(type);
+	TreeNode * p = t;
+	TreeNode * q;
+	while (token==COMMA)
+	{
+		match(COMMA);
+		q = param(type_spec());
+		if (q != NULL) {
+			if (t == NULL) t = p = q;
+			else /* now p cannot be NULL either */
+			{
+				p->sibling = q;
+				p = q;
+			}
+		}
+	}
+	return t;
+}
+
+TreeNode * param(ExpType type)
+{
+	TreeNode *t;
+	char *name;
+
+	name = copyString(tokenString);
+	match(ID);
+	if (token == LBRACE)
+	{
+		match(LBRACE);
+		match(RBRACE);
+		t = newExpNode(VarArrayDeclK);
+	}
+	else
+		t = newExpNode(VarDeclK);
+	if (t != NULL)
+	{
+		t->attr.name = name;
+		t->type = type;
+		t->isParam = TRUE;
+	}
+	return t;
+}
+
+TreeNode * comp_stmt(void)
+{
+	TreeNode *t = newStmtNode(CompStmtK);
+	match(LCURLY);
+	t->child[0] = local_decl();
+	t->child[1] = stmt_list();
+	match(RCURLY);
+	return t;
+}
+
+TreeNode * local_decl(void)
+{
+	TreeNode * t=NULL;
+	TreeNode * p;
+
+	if (token == INT || token == VOID)
+		t = var_decl();
+	p = t;
+	if (t != NULL)
+	{
+		while (token == INT || token == VOID )
+		{
+			TreeNode * q;
+			q = var_decl();
+			if (q != NULL) {
+				if (t == NULL) t = p = q;
+				else /* now p cannot be NULL either */
+				{
+					p->sibling = q;
+					p = q;
+				}
+			}
+		}
+	}
+	return t;
+}
+
+TreeNode * stmt_list(void)
+{
+	TreeNode * t;
+	TreeNode * p;
+
+	if (token == RCURLY)
+		return NULL;
+	t = stmt();
+	p = t;
+	while (token != RCURLY)
+	{
+		TreeNode * q;
+		q = stmt();
+		if (q != NULL) {
+			if (t == NULL) t = p = q;
+			else /* now p cannot be NULL either */
+			{
+				p->sibling = q;
+				p = q;
+			}
+		}
+	}
+	
+	return t;
+}
+
+TreeNode * stmt(void)
+{
+	TreeNode *t;
+	switch (token)
+	{
+	case LCURLY:
+		t = comp_stmt();
+		break;
+	case IF:
+		t = sel_stmt();
+		break;
+	case WHILE:
+		t = iter_stmt();
+		break;
+	case RETURN:
+		t = ret_stmt();
+		break;
+	case ID:
+	case LPAREN:
+	case NUM:
+	case SEMI:
+		t = expr_stmt();
+		break;
+	default: syntaxError("unexpected token(stmt) -> ");
+		printToken(token, tokenString);
+		token = getToken();
+		return Void;
+	}
+	return t;
+}
+
+TreeNode * expr_stmt(void)
+{
+	TreeNode *t;
+	
+	if (token == SEMI)
+		match(SEMI);
+	else if (token != RCURLY)
+	{
+		t = expr();
+		match(SEMI);
+	}
+	return t;
+}
+
+TreeNode * sel_stmt(void)
+{
+	TreeNode *t = newStmtNode(SelStmtK);
+
+	match(IF);
+	match(LPAREN);
+	if(t!=NULL)
+		t->child[0] = expr();
+	match(RPAREN);
+	if(t!=NULL)
+		t->child[1] = stmt();
+	if (token == ELSE)
+	{
+		match(ELSE);
+		if(t!=NULL)
+			t->child[2] = stmt();
+	}
+	
+	return t;
+}
+
+TreeNode * iter_stmt(void)
+{
+	TreeNode *t = newStmtNode(IterStmtK);
+
+	match(WHILE);
+	match(LPAREN);
+	if(t!=NULL)
+		t->child[0] = expr();
+	match(RPAREN);
+	if(t!=NULL)
+		t->child[1] = stmt();
+	return t;
+}
+
+TreeNode * ret_stmt(void)
+{
+	TreeNode *t = newStmtNode(RetStmtK);
+
+	match(RETURN);
+	if (token != SEMI && t!=NULL)
+		t->child[0] = expr();
+	match(SEMI);
+	return t;
+}
+
+TreeNode * expr(void)
+{
+	TreeNode *t;
+	TreeNode *q=NULL;
+	int flag = FALSE;
+
+	if (token == ID)
+	{
+		q = call();
+		flag = TRUE;
+	}
+
+	if (flag == TRUE && token == ASSIGN)
+	{
+		if (q != NULL && q->nodekind == ExpK && q->kind.exp == IdK)
+		{
+			match(ASSIGN);
+			t = newExpNode(AssignK);
+			if (t != NULL)
+			{
+				t->child[0] = q;
+				t->child[1] = expr();
+			}
+		}
+		else
+		{
+			syntaxError("attempt to assign to something not an lvalue\n");
+			token = getToken();
+		}
+	}
+	else
+		t = simp_expr(q);
+	return t;
+}
+
+TreeNode * simp_expr(TreeNode *f)
+{
+	TreeNode *t, *q;
+	TokenType oper;
+	q = add_expr(f);
+	if (token == LT || token == LE || token == GT || token == GE || token == EQ || token == NE)
+	{
+		oper = token;
+		match(token);
+		t = newExpNode(OpK);
+		if (t != NULL)
+		{
+			t->child[0] = q;
+			t->child[1] = add_expr(NULL);
+			t->attr.op = oper;
+		}
+	}
+	else
+		t = q;
+	return t;
+}
+
+TreeNode * add_expr(TreeNode *f)
+{
+	TreeNode * t;
+	TreeNode *q;
+
+	t = term(f);
+	if (t != NULL)
+	{
+		while (token == PLUS || token==MINUS)
+		{
+			q = newExpNode(OpK);
+			if (q != NULL) {
+					q->child[0] = t;
+					q->attr.op = token;
+					t = q;
+					match(token);
+					t->child[1] = term(NULL);
+				
+			}
+		}
+	}
+	return t;
+}
+
+TreeNode * term(TreeNode *f)
+{
+	TreeNode * t;
+	TreeNode *q;
+
+	t = factor(f);
+	if (t != NULL)
+	{
+		while (token == TIMES || token == OVER)
+		{
+			q = newExpNode(OpK);
+			if (q != NULL) {
+					q->child[0] = t;
+					q->attr.op = token;
+					t = q;
+					match(token);
+					t->child[1] = factor(NULL);
+				
+			}
+		}
+	}
+	return t;
+}
+
