@@ -542,3 +542,123 @@ TreeNode * term(TreeNode *f)
 	return t;
 }
 
+TreeNode * factor(TreeNode *f)
+{
+	TreeNode *t;
+	
+	if (f != NULL)
+		return f;
+
+	switch (token)
+	{
+	case LPAREN:
+		match(LPAREN);
+		t = expr();
+		match(RPAREN);
+		break;
+	case ID:
+		t = call();
+		break;
+	case NUM:
+		t = newExpNode(ConstK);
+		if (t != NULL)
+		{
+			t->attr.val = atoi(tokenString);
+			t->type = Integer;
+		}
+		match(NUM);
+		break;
+	default: syntaxError("unexpected token(factor) -> ");
+		printToken(token, tokenString);
+		token = getToken();
+		return Void;
+	}
+	return t;
+}
+
+TreeNode * call(void)
+{
+	TreeNode *t;
+	char *name;
+
+	if(token==ID)
+		name = copyString(tokenString);
+	match(ID);
+
+	if (token == LPAREN)
+	{
+		match(LPAREN);
+		t = newStmtNode(CallK);
+		if (t != NULL)
+		{
+			t->attr.name = name;
+			t->child[0] = args();
+		}
+		match(RPAREN);
+	}
+	else if(token==LBRACE)
+	{
+		t = newExpNode(IdK);
+		if (t != NULL)
+		{
+			t->attr.name = name;
+			t->type = Integer;
+			match(LBRACE);
+			t->child[0] = expr();
+			match(RBRACE);
+		}
+	}
+	else
+	{
+		t = newExpNode(IdK);
+		if (t != NULL)
+		{
+			t->attr.name = name;
+			t->type = Integer;
+		}
+	}
+	return t;
+}
+
+TreeNode * args(void)
+{
+	if (token == RPAREN)
+		return NULL;
+	else
+		return args_list();
+}
+
+TreeNode * args_list(void)
+{
+	TreeNode * t;
+	TreeNode * p;
+
+	t = expr();
+	p = t;
+	if (t != NULL)
+	{
+		while (token == COMMA)
+		{
+			match(COMMA);
+			TreeNode * q = expr();
+			if (q != NULL) {
+				if (t == NULL) t = p = q;
+				else /* now p cannot be NULL either */
+				{
+					p->sibling = q;
+					p = q;
+				}
+			}
+		}
+	}
+	return t;
+}
+
+TreeNode * parse(void)
+{ TreeNode * t;
+  token = getToken();
+  t = decl_list();
+  if (token!=ENDFILE)
+    syntaxError("Code ends before file\n");
+  return t;
+}
