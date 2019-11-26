@@ -1,8 +1,8 @@
 %{
-#include<cminus.h>
 #include<stdio.h>
 #include <stdlib.h>
 #define YY_DECL int yylex()
+extern int yylineno;
 %}
 
 %token IF 
@@ -158,7 +158,8 @@ args_list : args_list Comma expression {printf("args_list\n");}
 	  
 %%
 
-%%
+%{
 #include <ctype.h>
 int main(void) { return yyparse(); }
 int yyerror(const char* s) { printf("%s\n", s); return 0; }
+%}

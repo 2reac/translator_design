@@ -70,10 +70,10 @@
 /* Line 189 of yacc.c  */
 #line 1 "bison.y"
 
-#include<cminus.h>
 #include<stdio.h>
 #include <stdlib.h>
 #define YY_DECL int yylex()
+extern int yylineno;
 
 
 /* Line 189 of yacc.c  */
@@ -2105,8 +2105,9 @@ yyreturn:
 #line 159 "bison.y"
 
 
-%%
+%{
 #include <ctype.h>
 int main(void) { return yyparse(); }
 int yyerror(const char* s) { printf("%s\n", s); return 0; }
+%}
 

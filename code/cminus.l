@@ -3,8 +3,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "cminus.h"
+#include "y.tab.h"
 %}
+%option yylineno
 
 %%
 
@@ -43,11 +44,6 @@
 [ \t\n]+
 
 %%
-
-int yywrap(void)
-{
-	return 1;
-}
 
 void comment(void)
 {
