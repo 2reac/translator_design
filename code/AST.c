@@ -125,3 +125,129 @@ struct ASTNode* newCompound(struct ASTNode* localDecs, struct ASTNode* stmtList)
      root->child[0] = localDecs;
      root->child[1] = stmtList;
 }
+
+struct ASTNode* newLocalDecs(struct ASTNode* localDecs, struct ASTNode* varDec)
+{
+     struct ASTNode* node = localDecs;
+     if(localDecs == NULL)
+          return varDec;
+     while(node->sibling != NULL)
+          node = node->sibling;
+     node->sibling = varDec;
+     return localDecs;
+}
+struct ASTNode* newStmtList(struct ASTNode* stmtList, struct ASTNode* stmt)
+{
+     struct ASTNode* node = stmtList;
+     if(stmtList == NULL)
+          return stmt;
+     while(node->sibling != NULL)
+          node = node->sibling;
+     node->sibling = stmt;
+     return stmtList;
+}
+// stmt includes 5 type
+struct ASTNode* newStmt(struct ASTNode* stmt)
+{
+     return stmt;
+}
+// stmt==NULL => expression_stmt: SEMI
+struct ASTNode* newExpStmt(struct ASTNode* expression)
+{
+     struct ASTNode* root = newASTNode(EXPSTMT_AST);
+     root->child[0] =expression;
+     return root;
+}    
+struct ASTNode* newSelectStmt(struct ASTNode* expression, struct ASTNode* stmt, struct ASTNode* elseStmt)
+{
+     struct ASTNode* root = newASTNode(SELESTMT_AST);
+     root->child[0] = expression;
+     root->child[1] = stmt;
+     root->child[2] = elseStmt;
+     return root;
+}
+struct ASTNode* newIterStmt(struct ASTNode* expression,  struct ASTNode* stmt)
+{
+     assert(expression != NULL);
+     struct ASTNode* root = newASTNode(ITERSTMT_AST);
+     root->child[0] = expression;
+     root->child[1] = stmt;
+     return root;
+}
+// expression=NULL => return_stmt: RETURN SEMI;
+struct ASTNode* newRetStmt(struct ASTNode* expression)
+{
+     struct ASTNode* root = newASTNode(RETSTMT_AST);
+     root->child[0] = expression;
+     return root;
+}
+// assign statement
+struct ASTNode* newAssignExp(struct ASTNode* var, struct ASTNode* expression)
+{
+     struct ASTNode* root = newASTNode(ASSIGN_AST);
+     root->child[0] = var;
+     root->child[1] = expression;
+     return root;
+}
+struct ASTNode* newExpression(struct ASTNode* simpExp)
+{
+     return simpExp;
+}
+struct ASTNode* newVar(char* ID)
+{
+     struct ASTNode* root = newASTNode(VAR_AST);
+     root->child[0] = newIDNode(ID);
+     return root;
+}
+struct ASTNode* newArrayVar(char* ID, struct ASTNode* expression)
+{
+     struct ASTNode* root = newASTNode(ARRAYVAR_AST);
+     root->child[0] = newIDNode(ID);
+     root->child[1] = expression;
+     return root;
+}
+struct ASTNode* newSimpExp(struct ASTNode* addExp1, int relop, struct ASTNode* addExp2)
+{
+     struct ASTNode* root = NULL;
+     /* simple_expression: additive_expression relop additive_expression */
+     if(relop != -1)            
+     {
+          root = newASTNode(EXP_AST);
+          root->child[0] = addExp1;
+          root->child[1] = addExp2;
+          root->attr.op = relop;
+     }
+     else                       /* simple_expression: additive_expression  */
+     {
+          root = addExp1;
+     }
+     return root;
+}
+struct ASTNode* newRelop(int opType)
+{
+     return NULL;
+}
+struct ASTNode* newAddExp(struct ASTNode* addExp, int addop, struct ASTNode* term)
+{
+     struct ASTNode* root = newASTNode(EXP_AST);
+     root->child[0] = addExp;
+     root->child[1] = term;
+     root->attr.op = addop;
+     return root;
+}
+struct ASTNode* newAddOp(int opType)
+{
+     return NULL;
+}
+struct ASTNode* newTerm(struct ASTNode* term, int mulop, struct ASTNode* factor)
+{
+     struct ASTNode* root = newASTNode(EXP_AST);
+     root->child[0] = term;
+     root->child[1] = factor;
+     root->attr.op = mulop;
+     return root;
+}
+struct ASTNode* newTermFactor(struct ASTNode* factor)
+{
+     return factor;
+}
