@@ -251,3 +251,138 @@ struct ASTNode* newTermFactor(struct ASTNode* factor)
 {
      return factor;
 }
+
+struct ASTNode* newCall(char* ID, struct ASTNode* args)
+{
+     struct ASTNode* root = newASTNode(CALLSTMT_AST);
+     root->child[0] = newIDNode(ID);
+     root->child[1] = args;
+     return root;
+}
+struct ASTNode* newArgs(struct ASTNode* argList)
+{
+     return argList;
+}
+struct ASTNode* newArgList(struct ASTNode* argList, struct ASTNode* expression)
+{
+     struct ASTNode* node = argList;
+     while(node->sibling != NULL)
+          node = node->sibling;
+     node->sibling = expression;
+     return argList;
+}
+struct ASTNode* newASTNode(ASTType type)
+{
+     struct ASTNode* node = (struct ASTNode*)malloc(sizeof(struct ASTNode));
+     node->child[0] = NULL;
+     node->child[1] = NULL;
+     node->child[2] = NULL;
+     node->child[3] = NULL;
+     node->sibling = NULL;
+     node->astType = type;
+     return node;
+}
+struct ASTNode* newIDNode(char* ID)
+{
+     struct ASTNode* root = newASTNode(ID_AST);
+     root->attr.name = strdup(ID);
+     return root;
+}
+struct ASTNode* newNumNode(int num)
+{
+     struct ASTNode* root = newNumNode(NUM_AST);
+     root->attr.value = num;
+     return root;
+}
+void printNodeKind(struct ASTNode* node)
+{
+     if(node == NULL)
+           return;
+     switch(node->astType)
+     {
+     case VARDEC_AST:
+          printf("Var declaration.\n");
+          break;
+     case ARRAYDEC_AST:
+          printf("Array declaration AST.\n");
+          break;
+     case FUNDEC_AST:
+          printf("Function declaration AST.\n");
+          break;
+     case TYPE_AST:
+          printf("Type specifier AST.\n");
+          break;
+     case PARAMID_AST:
+          printf("Param of ID AST.\n");
+          break;
+     case PARAMARRAY_AST:
+          printf("Param of Array AST.\n");
+          break;
+     case COMPOUND_AST:
+          printf("Counpound statements AST.\n");
+          break;
+     case EXPSTMT_AST:
+          printf("Expression statement.\n");
+          break;
+     case SELESTMT_AST:
+          printf("Select statement.\n");
+          break;
+     case ITERSTMT_AST:
+          printf("Iteration statement.\n");
+          break;
+     case RETSTMT_AST:
+          printf("Return statement.\n");
+          break;
+     case ASSIGN_AST:
+          printf("Assign statement.\n");
+          break;
+     case EXP_AST:
+          printf("Expression AST.\n");
+          break;
+     case VAR_AST:
+          printf("Var AST.\n");
+          break;
+     case ARRAYVAR_AST:
+          printf("Array var AST.\n");
+          break;
+     case FACTOR_AST:
+          printf("Factor AST.\n");
+          break;
+     case CALLSTMT_AST:
+          printf("Call stement AST.\n");
+          break;
+     case ARGS_AST:
+          printf("Args AST.\n");
+          break;
+     case ARGLIST_AST:
+          printf("Arg List AST.\n");
+          break;
+     case NUM_AST:
+          printf("Number AST: %d\n", node->attr.value);
+          break;
+     case ID_AST:
+          printf("ID AST: %s\n", node->attr.name);
+          break;
+     default:
+          printf("No such AST type.\n");
+          break;
+     }
+}
+void printAST(struct ASTNode* root, int indent)
+{
+     struct ASTNode* node = root;
+     int i;
+     while(node != NULL)
+     {
+          for (i = 0; i<indent; ++i)
+          {
+               printf(" ");
+          }
+          printNodeKind(node);
+          printAST(node->child[0], indent+4);
+          printAST(node->child[1], indent+4);
+          printAST(node->child[2], indent+4); 
+          printAST(node->child[3], indent+4);         
+          node = node->sibling;
+     }
+}
