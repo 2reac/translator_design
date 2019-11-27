@@ -45,7 +45,7 @@
      INT = 261,
      VOID = 262,
      WHILE = 263,
-     ID = 264,
+     IDENTIFIER = 264,
      NUM = 265,
      Op_lessequal = 266,
      Op_greaterequal = 267,
@@ -77,7 +77,7 @@
 #define INT 261
 #define VOID 262
 #define WHILE 263
-#define ID 264
+#define IDENTIFIER 264
 #define NUM 265
 #define Op_lessequal 266
 #define Op_greaterequal 267

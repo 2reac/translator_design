@@ -110,7 +110,7 @@ extern int yylineno;
      INT = 261,
      VOID = 262,
      WHILE = 263,
-     ID = 264,
+     IDENTIFIER = 264,
      NUM = 265,
      Op_lessequal = 266,
      Op_greaterequal = 267,
@@ -142,7 +142,7 @@ extern int yylineno;
 #define INT 261
 #define VOID 262
 #define WHILE 263
-#define ID 264
+#define IDENTIFIER 264
 #define NUM 265
 #define Op_lessequal 266
 #define Op_greaterequal 267
@@ -489,13 +489,13 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    40,    40,    44,    45,    48,    49,    52,    53,    54,
-      57,    58,    61,    62,    65,    66,    69,    72,    73,    76,
-      77,    80,    81,    84,    87,    88,    91,    92,    95,    96,
-      97,    98,    99,   102,   103,   106,   107,   110,   111,   114,
-     115,   118,   119,   120,   121,   122,   123,   126,   127,   130,
-     131,   134,   135,   138,   139,   142,   143,   144,   145,   148,
-     151,   152,   155,   156
+       0,    40,    40,    43,    44,    47,    48,    51,    54,    55,
+      58,    59,    62,    63,    66,    67,    70,    73,    74,    77,
+      78,    81,    82,    85,    88,    89,    92,    93,    96,    97,
+      98,    99,   100,   103,   104,   107,   108,   111,   112,   115,
+     116,   119,   120,   121,   122,   123,   124,   127,   128,   131,
+     132,   135,   136,   139,   140,   143,   144,   145,   146,   149,
+     152,   153,   156,   157
 };
 #endif
 
@@ -505,17 +505,17 @@ static const yytype_uint8 yyrline[] =
 static const char *const yytname[] =
 {
   "$end", "error", "$undefined", "IF", "ELSE", "RETURN", "INT", "VOID",
-  "WHILE", "ID", "NUM", "Op_lessequal", "Op_greaterequal", "Op_equal",
-  "Op_notequal", "LeftPrnts", "RightPrnts", "LeftBrack", "RightBrack",
-  "LeftBrace", "RightBrace", "Op_add", "Op_subtract", "Op_multiply",
-  "Op_divide", "Op_mod", "Op_less", "Op_greater", "Op_assign", "Semicolon",
-  "Comma", "Eps", "$accept", "program", "expression_stmt",
-  "selection_stmt", "iteration_stmt", "declaration_list", "declaration",
-  "var_declaration", "type_specifier", "fun_declaration", "params",
-  "params_list", "param", "compound_stmt", "local_declarations",
-  "statement_list", "statement", "return_stmt", "expression", "var",
-  "simple_expression", "relop", "additive_expression", "addop", "term",
-  "mulop", "factor", "call", "args", "args_list", 0
+  "WHILE", "IDENTIFIER", "NUM", "Op_lessequal", "Op_greaterequal",
+  "Op_equal", "Op_notequal", "LeftPrnts", "RightPrnts", "LeftBrack",
+  "RightBrack", "LeftBrace", "RightBrace", "Op_add", "Op_subtract",
+  "Op_multiply", "Op_divide", "Op_mod", "Op_less", "Op_greater",
+  "Op_assign", "Semicolon", "Comma", "Eps", "$accept", "program",
+  "expression_stmt", "selection_stmt", "iteration_stmt",
+  "declaration_list", "declaration", "var_declaration", "type_specifier",
+  "fun_declaration", "params", "params_list", "param", "compound_stmt",
+  "local_declarations", "statement_list", "statement", "return_stmt",
+  "expression", "var", "simple_expression", "relop", "additive_expression",
+  "addop", "term", "mulop", "factor", "call", "args", "args_list", 0
 };
 #endif
 
@@ -1467,430 +1467,437 @@ yyreduce:
   YY_REDUCE_PRINT (yyn);
   switch (yyn)
     {
-        case 3:
+        case 2:
 
 /* Line 1455 of yacc.c  */
-#line 44 "bison.y"
+#line 40 "bison.y"
+    {printf("program\n");}
+    break;
+
+  case 3:
+
+/* Line 1455 of yacc.c  */
+#line 43 "bison.y"
     {printf("expression_stmt\n");}
     break;
 
   case 4:
 
 /* Line 1455 of yacc.c  */
-#line 45 "bison.y"
+#line 44 "bison.y"
     {printf("expression_stmt\n");}
     break;
 
   case 5:
 
 /* Line 1455 of yacc.c  */
-#line 48 "bison.y"
+#line 47 "bison.y"
     {printf("selection_stmt\n");}
     break;
 
   case 6:
 
 /* Line 1455 of yacc.c  */
-#line 49 "bison.y"
+#line 48 "bison.y"
     {printf("selection_stmt\n");}
     break;
 
   case 7:
 
 /* Line 1455 of yacc.c  */
-#line 52 "bison.y"
+#line 51 "bison.y"
     {printf("iteration_stmt\n");}
     break;
 
   case 8:
 
 /* Line 1455 of yacc.c  */
-#line 53 "bison.y"
+#line 54 "bison.y"
     {printf("declaration_list\n");}
     break;
 
   case 9:
 
 /* Line 1455 of yacc.c  */
-#line 54 "bison.y"
+#line 55 "bison.y"
     {printf("declaration_list\n");}
     break;
 
   case 10:
 
 /* Line 1455 of yacc.c  */
-#line 57 "bison.y"
+#line 58 "bison.y"
     {printf("declaration\n");}
     break;
 
   case 11:
 
 /* Line 1455 of yacc.c  */
-#line 58 "bison.y"
+#line 59 "bison.y"
     {printf("declaration\n");}
     break;
 
   case 13:
 
 /* Line 1455 of yacc.c  */
-#line 62 "bison.y"
+#line 63 "bison.y"
     {printf("var_declaration\n");}
     break;
 
   case 14:
 
 /* Line 1455 of yacc.c  */
-#line 65 "bison.y"
+#line 66 "bison.y"
     {printf("type\n");}
     break;
 
   case 15:
 
 /* Line 1455 of yacc.c  */
-#line 66 "bison.y"
+#line 67 "bison.y"
     {printf("type\n");}
     break;
 
   case 16:
 
 /* Line 1455 of yacc.c  */
-#line 69 "bison.y"
+#line 70 "bison.y"
     {printf("fun_declaration\n");}
     break;
 
   case 17:
 
 /* Line 1455 of yacc.c  */
-#line 72 "bison.y"
+#line 73 "bison.y"
     {printf("params\n");}
     break;
 
   case 18:
 
 /* Line 1455 of yacc.c  */
-#line 73 "bison.y"
+#line 74 "bison.y"
     {printf("params\n");}
     break;
 
   case 19:
 
 /* Line 1455 of yacc.c  */
-#line 76 "bison.y"
+#line 77 "bison.y"
     {printf("params_list\n");}
     break;
 
   case 20:
 
 /* Line 1455 of yacc.c  */
-#line 77 "bison.y"
+#line 78 "bison.y"
     {printf("params_list\n");}
     break;
 
   case 21:
 
 /* Line 1455 of yacc.c  */
-#line 80 "bison.y"
+#line 81 "bison.y"
     {printf("param\n");}
     break;
 
   case 22:
 
 /* Line 1455 of yacc.c  */
-#line 81 "bison.y"
+#line 82 "bison.y"
     {printf("param\n");}
     break;
 
   case 23:
 
 /* Line 1455 of yacc.c  */
-#line 84 "bison.y"
+#line 85 "bison.y"
     {printf("compound_stmt\n");}
     break;
 
   case 24:
 
 /* Line 1455 of yacc.c  */
-#line 87 "bison.y"
+#line 88 "bison.y"
     {printf("local_declarations\n");}
     break;
 
   case 25:
 
 /* Line 1455 of yacc.c  */
-#line 88 "bison.y"
+#line 89 "bison.y"
     {printf("local_declarations\n");}
     break;
 
   case 26:
 
 /* Line 1455 of yacc.c  */
-#line 91 "bison.y"
+#line 92 "bison.y"
     {printf("statement_list\n");}
     break;
 
   case 27:
 
 /* Line 1455 of yacc.c  */
-#line 92 "bison.y"
+#line 93 "bison.y"
     {printf("statement_list\n");}
     break;
 
   case 28:
 
 /* Line 1455 of yacc.c  */
-#line 95 "bison.y"
+#line 96 "bison.y"
     {printf("statement\n");}
     break;
 
   case 29:
 
 /* Line 1455 of yacc.c  */
-#line 96 "bison.y"
+#line 97 "bison.y"
     {printf("statement\n");}
     break;
 
   case 30:
 
 /* Line 1455 of yacc.c  */
-#line 97 "bison.y"
+#line 98 "bison.y"
     {printf("statement\n");}
     break;
 
   case 31:
 
 /* Line 1455 of yacc.c  */
-#line 98 "bison.y"
+#line 99 "bison.y"
     {printf("statement\n");}
     break;
 
   case 32:
 
 /* Line 1455 of yacc.c  */
-#line 99 "bison.y"
+#line 100 "bison.y"
     {printf("statement\n");}
     break;
 
   case 33:
 
 /* Line 1455 of yacc.c  */
-#line 102 "bison.y"
+#line 103 "bison.y"
     {printf("return_stmt\n");}
     break;
 
   case 34:
 
 /* Line 1455 of yacc.c  */
-#line 103 "bison.y"
+#line 104 "bison.y"
     {printf("return_stmt\n");}
     break;
 
   case 35:
 
 /* Line 1455 of yacc.c  */
-#line 106 "bison.y"
+#line 107 "bison.y"
     {printf("expression\n");}
     break;
 
   case 36:
 
 /* Line 1455 of yacc.c  */
-#line 107 "bison.y"
+#line 108 "bison.y"
     {printf("expression\n");}
     break;
 
   case 37:
 
 /* Line 1455 of yacc.c  */
-#line 110 "bison.y"
+#line 111 "bison.y"
     {printf("var\n");}
     break;
 
   case 38:
 
 /* Line 1455 of yacc.c  */
-#line 111 "bison.y"
+#line 112 "bison.y"
     {printf("var\n");}
     break;
 
   case 39:
 
 /* Line 1455 of yacc.c  */
-#line 114 "bison.y"
+#line 115 "bison.y"
     {printf("simple_expression\n");}
     break;
 
   case 40:
 
 /* Line 1455 of yacc.c  */
-#line 115 "bison.y"
+#line 116 "bison.y"
     {printf("simple_expression\n");}
     break;
 
   case 41:
 
 /* Line 1455 of yacc.c  */
-#line 118 "bison.y"
+#line 119 "bison.y"
     {printf("relop\n");}
     break;
 
   case 42:
 
 /* Line 1455 of yacc.c  */
-#line 119 "bison.y"
+#line 120 "bison.y"
     {printf("relop\n");}
     break;
 
   case 43:
 
 /* Line 1455 of yacc.c  */
-#line 120 "bison.y"
+#line 121 "bison.y"
     {printf("relop\n");}
     break;
 
   case 44:
 
 /* Line 1455 of yacc.c  */
-#line 121 "bison.y"
+#line 122 "bison.y"
     {printf("relop\n");}
     break;
 
   case 45:
 
 /* Line 1455 of yacc.c  */
-#line 122 "bison.y"
+#line 123 "bison.y"
     {printf("relop\n");}
     break;
 
   case 46:
 
 /* Line 1455 of yacc.c  */
-#line 123 "bison.y"
+#line 124 "bison.y"
     {printf("relop\n");}
     break;
 
   case 47:
 
 /* Line 1455 of yacc.c  */
-#line 126 "bison.y"
+#line 127 "bison.y"
     {printf("additive_expression\n");}
     break;
 
   case 48:
 
 /* Line 1455 of yacc.c  */
-#line 127 "bison.y"
+#line 128 "bison.y"
     {printf("additive_expression\n");}
     break;
 
   case 49:
 
 /* Line 1455 of yacc.c  */
-#line 130 "bison.y"
+#line 131 "bison.y"
     {printf("addop\n");}
     break;
 
   case 50:
 
 /* Line 1455 of yacc.c  */
-#line 131 "bison.y"
+#line 132 "bison.y"
     {printf("addop\n");}
     break;
 
   case 51:
 
 /* Line 1455 of yacc.c  */
-#line 134 "bison.y"
+#line 135 "bison.y"
     {printf("term\n");}
     break;
 
   case 52:
 
 /* Line 1455 of yacc.c  */
-#line 135 "bison.y"
+#line 136 "bison.y"
     {printf("term\n");}
     break;
 
   case 53:
 
 /* Line 1455 of yacc.c  */
-#line 138 "bison.y"
+#line 139 "bison.y"
     {printf("mulop\n");}
     break;
 
   case 54:
 
 /* Line 1455 of yacc.c  */
-#line 139 "bison.y"
+#line 140 "bison.y"
     {printf("mulop\n");}
     break;
 
   case 55:
 
 /* Line 1455 of yacc.c  */
-#line 142 "bison.y"
+#line 143 "bison.y"
     {printf("factor\n");}
     break;
 
   case 56:
 
 /* Line 1455 of yacc.c  */
-#line 143 "bison.y"
+#line 144 "bison.y"
     {printf("factor\n");}
     break;
 
   case 57:
 
 /* Line 1455 of yacc.c  */
-#line 144 "bison.y"
+#line 145 "bison.y"
     {printf("factor\n");}
     break;
 
   case 58:
 
 /* Line 1455 of yacc.c  */
-#line 145 "bison.y"
+#line 146 "bison.y"
     {printf("factor\n");}
     break;
 
   case 59:
 
 /* Line 1455 of yacc.c  */
-#line 148 "bison.y"
+#line 149 "bison.y"
     {printf("call\n");}
     break;
 
   case 60:
 
 /* Line 1455 of yacc.c  */
-#line 151 "bison.y"
+#line 152 "bison.y"
     {printf("args\n");}
     break;
 
   case 61:
 
 /* Line 1455 of yacc.c  */
-#line 152 "bison.y"
+#line 153 "bison.y"
     {printf("args\n");}
     break;
 
   case 62:
 
 /* Line 1455 of yacc.c  */
-#line 155 "bison.y"
+#line 156 "bison.y"
     {printf("args_list\n");}
     break;
 
   case 63:
 
 /* Line 1455 of yacc.c  */
-#line 156 "bison.y"
+#line 157 "bison.y"
     {printf("args_list\n");}
     break;
 
 
 
 /* Line 1455 of yacc.c  */
-#line 1894 "y.tab.c"
+#line 1901 "y.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2102,12 +2109,6 @@ yyreturn:
 
 
 /* Line 1675 of yacc.c  */
-#line 159 "bison.y"
+#line 160 "bison.y"
 
-
-%{
-#include <ctype.h>
-int main(void) { return yyparse(); }
-int yyerror(const char* s) { printf("%s\n", s); return 0; }
-%}
 

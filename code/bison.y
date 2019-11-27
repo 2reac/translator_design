@@ -37,9 +37,8 @@ extern int yylineno;
 
 %% /* Grammar rules and actions follow */
 
-program: declaration_list 
+program: declaration_list {printf("program\n");}
 	   ;
-
 		  
 expression_stmt : expression Semicolon {printf("expression_stmt\n");}
 			   | Semicolon {printf("expression_stmt\n");}
@@ -50,6 +49,8 @@ selection_stmt : IF LeftPrnts statement RightPrnts {printf("selection_stmt\n");}
 			   ;
 			   
 iteration_stmt : WHILE LeftPrnts expression RightPrnts statement {printf("iteration_stmt\n");}
+			   ;
+
 declaration_list: declaration declaration_list {printf("declaration_list\n");}
                 | declaration {printf("declaration_list\n");}
 				;
