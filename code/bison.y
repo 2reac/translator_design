@@ -11,7 +11,7 @@ extern int yylineno;
 %token INT
 %token VOID
 %token WHILE
-%token ID
+%token IDENTIFIER
 %token NUM
 %token Op_lessequal
 %token Op_greaterequal
@@ -58,15 +58,15 @@ declaration : fun_declaration {printf("declaration\n");}
             | var_declaration {printf("declaration\n");}
             ;
 
-var_declaration : type_specifier ID Semicolon
-				| type_specifier ID LeftBrack NUM RightBrack {printf("var_declaration\n");}
+var_declaration : type_specifier IDENTIFIER Semicolon
+				| type_specifier IDENTIFIER LeftBrack NUM RightBrack {printf("var_declaration\n");}
                 ;
 
 type_specifier : INT {printf("type\n");}
 				| VOID {printf("type\n");}
 				;
 
-fun_declaration : type_specifier ID LeftPrnts params RightPrnts compound_stmt {printf("fun_declaration\n");}
+fun_declaration : type_specifier IDENTIFIER LeftPrnts params RightPrnts compound_stmt {printf("fun_declaration\n");}
                 ;
 				
 params : params_list {printf("params\n");}
@@ -77,8 +77,8 @@ params_list : params_list Comma param {printf("params_list\n");}
 			| param {printf("params_list\n");}
 			;
 			
-param : type_specifier ID {printf("param\n");}
-	  | type_specifier ID LeftBrack RightBrack {printf("param\n");}
+param : type_specifier IDENTIFIER {printf("param\n");}
+	  | type_specifier IDENTIFIER LeftBrack RightBrack {printf("param\n");}
 	  ;
 	  
 compound_stmt : LeftBrace local_declarations statement_list RightBrace {printf("compound_stmt\n");}
@@ -107,8 +107,8 @@ expression : var Op_equal expression {printf("expression\n");}
 		   | simple_expression {printf("expression\n");}
 		   ;
 		   
-var : ID {printf("var\n");}
-	| ID LeftBrack expression RightBrack {printf("var\n");}
+var : IDENTIFIER {printf("var\n");}
+	| IDENTIFIER LeftBrack expression RightBrack {printf("var\n");}
 	;
 	
 simple_expression : additive_expression relop additive_expression {printf("simple_expression\n");}
@@ -145,7 +145,7 @@ factor : LeftPrnts expression RightPrnts {printf("factor\n");}
 	   | NUM {printf("factor\n");}
 	   ;
 	   
-call : ID LeftPrnts args RightPrnts {printf("call\n");}
+call : IDENTIFIER LeftPrnts args RightPrnts {printf("call\n");}
 	 ;
 	 
 args : args_list {printf("args\n");}
@@ -157,9 +157,3 @@ args_list : args_list Comma expression {printf("args_list\n");}
 		  ;
 	  
 %%
-
-%{
-#include <ctype.h>
-int main(void) { return yyparse(); }
-int yyerror(const char* s) { printf("%s\n", s); return 0; }
-%}

@@ -16,7 +16,7 @@
 "void" 		{return VOID;}
 "while" 	{return WHILE;}
 
-[a-zA-Z][a-zA-Z0-9_]* {printf ("ID: %s\n",yytext); return ID;}
+[a-zA-Z][a-zA-Z0-9_]* {printf ("ID: %s\n",yytext); return IDENTIFIER;}
 [0-9]+		{printf ("NUM: %d\n",atoi(yytext)); return NUM;}
 
 "<="		{return Op_lessequal;}
@@ -56,7 +56,6 @@ void comment(void)
 		prev = c;
 	}
 }
-
 
 int column = 0;
 
