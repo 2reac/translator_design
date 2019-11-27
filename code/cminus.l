@@ -3,9 +3,11 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include "global.h"
 #include "y.tab.h"
 %}
 %option yylineno
+%option noyywrap
 
 %%
 
@@ -16,8 +18,8 @@
 "void" 		{return VOID;}
 "while" 	{return WHILE;}
 
-[a-zA-Z][a-zA-Z0-9_]* {printf ("ID: %s\n",yytext); return IDENTIFIER;}
-[0-9]+		{printf ("NUM: %d\n",atoi(yytext)); return NUM;}
+[a-zA-Z][a-zA-Z0-9_]* {return IDENTIFIER;}
+[0-9]+		{return NUM;}
 
 "<="		{return Op_lessequal;}
 ">="		{return Op_greaterequal;}
@@ -34,7 +36,6 @@
 "-"			{return Op_subtract;}
 "*"			{return Op_multiply;}
 "/"			{return Op_divide;}
-"%"			{return Op_mod;}
 "<"			{return Op_less;}
 ">"			{return Op_greater;}
 "="			{return Op_assign;}
