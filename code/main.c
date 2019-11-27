@@ -5,7 +5,17 @@
 #include "y.tab.h"
 #include "AST.h"
 extern int yylineno;
+extern int yylex();
 struct ASTNode* ASTRoot = NULL;
+
+void yyerror(const char* msg)
+{
+     if (msg)
+     printf("%s\n", msg);
+}
+int yywrap(){
+     return 1;
+}
 int main(int argc, char *argv[])
 {
      int i;
@@ -34,15 +44,4 @@ int main(int argc, char *argv[])
 	 printf("Press x to continue");
 	 getch();
      return 0;
-}
-int hashcode(char *key)
-{
-     int temp = 0;
-     int i = 0;
-     while(key[i] != '\0')
-     {
-          temp = ((temp<<SHIFT) + key[i]) % SIZE;
-          i++;
-     }
-     return temp;
 }

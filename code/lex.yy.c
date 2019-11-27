@@ -703,12 +703,12 @@ YY_RULE_SETUP
 case 7:
 YY_RULE_SETUP
 #line 21 "cminus.l"
-{return IDENTIFIER;}
+{yylval.name = strdup(yytext); return IDENTIFIER;}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
 #line 22 "cminus.l"
-{return NUM;}
+{yylval.value = atoi(yytext); return NUM;}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP

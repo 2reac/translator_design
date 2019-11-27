@@ -18,8 +18,8 @@
 "void" 		{return VOID;}
 "while" 	{return WHILE;}
 
-[a-zA-Z][a-zA-Z0-9_]* {return IDENTIFIER;}
-[0-9]+		{return NUM;}
+[a-zA-Z][a-zA-Z0-9_]* {yylval.name = strdup(yytext); return IDENTIFIER;}
+[0-9]+		{yylval.value = atoi(yytext); return NUM;}
 
 "<="		{return Op_lessequal;}
 ">="		{return Op_greaterequal;}
