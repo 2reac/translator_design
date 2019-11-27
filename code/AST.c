@@ -4,62 +4,62 @@
 #include <stdlib.h>
 #include <assert.h>
 #include <string.h>
-struct ASTNode* newProgram(struct ASTNode* decList)
+struct ASTNode *newProgram(struct ASTNode *decList)
 {
      return decList;
 }
 // decList==NULL => declaration
-struct ASTNode* newDecList(struct ASTNode* decList, struct ASTNode* declaration)
+struct ASTNode *newDecList(struct ASTNode *decList, struct ASTNode *declaration)
 {
-     struct ASTNode* root = NULL;
-     struct ASTNode* node = decList;
+     struct ASTNode *root = NULL;
+     struct ASTNode *node = decList;
      assert(declaration != NULL);
      // declaration_list: declaration_list declaration
-     if(decList != NULL)
+     if (decList != NULL)
      {
-          while(node->sibling != NULL)
+          while (node->sibling != NULL)
                node = node->sibling;
           node->sibling = declaration;
           root = decList;
      }
-     else                       // declaration_list: declaration
+     else // declaration_list: declaration
      {
           root = declaration;
      }
      return root;
 }
 // type: 0=var, 1=fun
-struct ASTNode* newDec(struct ASTNode* declaration, int type)
+struct ASTNode *newDec(struct ASTNode *declaration, int type)
 {
      return declaration;
 }
 // var_declaration: type_specifier ID SEMI
-struct ASTNode* newVarDec(struct ASTNode* typeSpecifier, char* ID)
+struct ASTNode *newVarDec(struct ASTNode *typeSpecifier, char *ID)
 {
-     struct ASTNode* root = newASTNode(VARDEC_AST);
+     struct ASTNode *root = newASTNode(VARDEC_AST);
      root->child[0] = typeSpecifier;
      root->child[1] = newIDNode(ID);
      return root;
 }
 // var_declaration: type_specifier ID LSB NUMBER RSB SEMI
-struct ASTNode* newArrayDec(struct ASTNode* typeSpecifier, char* ID, int size)
+struct ASTNode *newArrayDec(struct ASTNode *typeSpecifier, char *ID, int size)
 {
-     struct ASTNode* root = newASTNode(ARRAYDEC_AST);
+     struct ASTNode *root = newASTNode(ARRAYDEC_AST);
      root->child[0] = typeSpecifier;
      root->child[1] = newIDNode(ID);
      root->child[2] = newNumNode(size);
      return root;
 }
-struct ASTNode* newTypeSpe(ExpType type)
+struct ASTNode *newTypeSpe(ExpType type)
 {
-     struct ASTNode* root = newASTNode(TYPE_AST);
+     struct ASTNode *root = newASTNode(TYPE_AST);
      root->type = type;
      return root;
 }
 // fun_declaration: type_specifier ID LBracket params RBracket compound_stmt
-struct ASTNode* newFunDec(struct ASTNode* typeSpecifier, char* ID, struct ASTNode* params, struct ASTNode* compound)
+struct ASTNode *newFunDec(struct ASTNode *typeSpecifier, char *ID, struct ASTNode *params, struct ASTNode *compound)
 {
-     struct ASTNode* root = newASTNode(FUNDEC_AST);
+     struct ASTNode *root = newASTNode(FUNDEC_AST);
      root->child[0] = typeSpecifier;
      root->child[1] = newIDNode(ID);
      root->child[2] = params;
@@ -67,11 +67,11 @@ struct ASTNode* newFunDec(struct ASTNode* typeSpecifier, char* ID, struct ASTNod
      return root;
 }
 // paramList==NULL => params: VOID
-struct ASTNode* newParams(struct ASTNode* paramList)
+struct ASTNode *newParams(struct ASTNode *paramList)
 {
      // params: param_list
-     struct ASTNode* root = NULL;
-     if(paramList != NULL)
+     struct ASTNode *root = NULL;
+     if (paramList != NULL)
      {
           return paramList;
      }
@@ -83,13 +83,13 @@ struct ASTNode* newParams(struct ASTNode* paramList)
      }
 }
 // paramList==NULL => param_list:param
-struct ASTNode* newParamList(struct ASTNode* paramList, struct ASTNode* param)
+struct ASTNode *newParamList(struct ASTNode *paramList, struct ASTNode *param)
 {
      // param_list: param_list SEMI param
-     struct ASTNode* node = paramList;
-     if(paramList != NULL)
+     struct ASTNode *node = paramList;
+     if (paramList != NULL)
      {
-          while(node->sibling != NULL)
+          while (node->sibling != NULL)
                node = node->sibling;
           node->sibling = param;
           return paramList;
@@ -100,11 +100,11 @@ struct ASTNode* newParamList(struct ASTNode* paramList, struct ASTNode* param)
      }
 }
 // type: 1=id is array 0=otherwise
-struct ASTNode* newParam(struct ASTNode* typeSpecifier, char* ID, int type)
+struct ASTNode *newParam(struct ASTNode *typeSpecifier, char *ID, int type)
 {
      // param: type_specifier ID
-     struct ASTNode* root = NULL;
-     if(type == 0)
+     struct ASTNode *root = NULL;
+     if (type == 0)
      {
           root = newASTNode(PARAMID_AST);
           root->child[0] = typeSpecifier;
@@ -118,162 +118,162 @@ struct ASTNode* newParam(struct ASTNode* typeSpecifier, char* ID, int type)
      }
      return root;
 }
-struct ASTNode* newCompound(struct ASTNode* localDecs, struct ASTNode* stmtList)
+struct ASTNode *newCompound(struct ASTNode *localDecs, struct ASTNode *stmtList)
 {
-     struct ASTNode* node = localDecs;
-     struct ASTNode* root = newASTNode(COMPOUND_AST);
+     struct ASTNode *node = localDecs;
+     struct ASTNode *root = newASTNode(COMPOUND_AST);
      root->child[0] = localDecs;
      root->child[1] = stmtList;
 }
 
-struct ASTNode* newLocalDecs(struct ASTNode* localDecs, struct ASTNode* varDec)
+struct ASTNode *newLocalDecs(struct ASTNode *localDecs, struct ASTNode *varDec)
 {
-     struct ASTNode* node = localDecs;
-     if(localDecs == NULL)
+     struct ASTNode *node = localDecs;
+     if (localDecs == NULL)
           return varDec;
-     while(node->sibling != NULL)
+     while (node->sibling != NULL)
           node = node->sibling;
      node->sibling = varDec;
      return localDecs;
 }
-struct ASTNode* newStmtList(struct ASTNode* stmtList, struct ASTNode* stmt)
+struct ASTNode *newStmtList(struct ASTNode *stmtList, struct ASTNode *stmt)
 {
-     struct ASTNode* node = stmtList;
-     if(stmtList == NULL)
+     struct ASTNode *node = stmtList;
+     if (stmtList == NULL)
           return stmt;
-     while(node->sibling != NULL)
+     while (node->sibling != NULL)
           node = node->sibling;
      node->sibling = stmt;
      return stmtList;
 }
 // stmt includes 5 type
-struct ASTNode* newStmt(struct ASTNode* stmt)
+struct ASTNode *newStmt(struct ASTNode *stmt)
 {
      return stmt;
 }
 // stmt==NULL => expression_stmt: SEMI
-struct ASTNode* newExpStmt(struct ASTNode* expression)
+struct ASTNode *newExpStmt(struct ASTNode *expression)
 {
-     struct ASTNode* root = newASTNode(EXPSTMT_AST);
-     root->child[0] =expression;
+     struct ASTNode *root = newASTNode(EXPSTMT_AST);
+     root->child[0] = expression;
      return root;
-}    
-struct ASTNode* newSelectStmt(struct ASTNode* expression, struct ASTNode* stmt, struct ASTNode* elseStmt)
+}
+struct ASTNode *newSelectStmt(struct ASTNode *expression, struct ASTNode *stmt, struct ASTNode *elseStmt)
 {
-     struct ASTNode* root = newASTNode(SELESTMT_AST);
+     struct ASTNode *root = newASTNode(SELESTMT_AST);
      root->child[0] = expression;
      root->child[1] = stmt;
      root->child[2] = elseStmt;
      return root;
 }
-struct ASTNode* newIterStmt(struct ASTNode* expression,  struct ASTNode* stmt)
+struct ASTNode *newIterStmt(struct ASTNode *expression, struct ASTNode *stmt)
 {
      assert(expression != NULL);
-     struct ASTNode* root = newASTNode(ITERSTMT_AST);
+     struct ASTNode *root = newASTNode(ITERSTMT_AST);
      root->child[0] = expression;
      root->child[1] = stmt;
      return root;
 }
 // expression=NULL => return_stmt: RETURN SEMI;
-struct ASTNode* newRetStmt(struct ASTNode* expression)
+struct ASTNode *newRetStmt(struct ASTNode *expression)
 {
-     struct ASTNode* root = newASTNode(RETSTMT_AST);
+     struct ASTNode *root = newASTNode(RETSTMT_AST);
      root->child[0] = expression;
      return root;
 }
 // assign statement
-struct ASTNode* newAssignExp(struct ASTNode* var, struct ASTNode* expression)
+struct ASTNode *newAssignExp(struct ASTNode *var, struct ASTNode *expression)
 {
-     struct ASTNode* root = newASTNode(ASSIGN_AST);
+     struct ASTNode *root = newASTNode(ASSIGN_AST);
      root->child[0] = var;
      root->child[1] = expression;
      return root;
 }
-struct ASTNode* newExpression(struct ASTNode* simpExp)
+struct ASTNode *newExpression(struct ASTNode *simpExp)
 {
      return simpExp;
 }
-struct ASTNode* newVar(char* ID)
+struct ASTNode *newVar(char *ID)
 {
-     struct ASTNode* root = newASTNode(VAR_AST);
+     struct ASTNode *root = newASTNode(VAR_AST);
      root->child[0] = newIDNode(ID);
      return root;
 }
-struct ASTNode* newArrayVar(char* ID, struct ASTNode* expression)
+struct ASTNode *newArrayVar(char *ID, struct ASTNode *expression)
 {
-     struct ASTNode* root = newASTNode(ARRAYVAR_AST);
+     struct ASTNode *root = newASTNode(ARRAYVAR_AST);
      root->child[0] = newIDNode(ID);
      root->child[1] = expression;
      return root;
 }
-struct ASTNode* newSimpExp(struct ASTNode* addExp1, int relop, struct ASTNode* addExp2)
+struct ASTNode *newSimpExp(struct ASTNode *addExp1, int relop, struct ASTNode *addExp2)
 {
-     struct ASTNode* root = NULL;
+     struct ASTNode *root = NULL;
      /* simple_expression: additive_expression relop additive_expression */
-     if(relop != -1)            
+     if (relop != -1)
      {
           root = newASTNode(EXP_AST);
           root->child[0] = addExp1;
           root->child[1] = addExp2;
           root->attr.op = relop;
      }
-     else                       /* simple_expression: additive_expression  */
+     else /* simple_expression: additive_expression  */
      {
           root = addExp1;
      }
      return root;
 }
-struct ASTNode* newRelop(int opType)
+struct ASTNode *newRelop(int opType)
 {
      return NULL;
 }
-struct ASTNode* newAddExp(struct ASTNode* addExp, int addop, struct ASTNode* term)
+struct ASTNode *newAddExp(struct ASTNode *addExp, int addop, struct ASTNode *term)
 {
-     struct ASTNode* root = newASTNode(EXP_AST);
+     struct ASTNode *root = newASTNode(EXP_AST);
      root->child[0] = addExp;
      root->child[1] = term;
      root->attr.op = addop;
      return root;
 }
-struct ASTNode* newAddOp(int opType)
+struct ASTNode *newAddOp(int opType)
 {
      return NULL;
 }
-struct ASTNode* newTerm(struct ASTNode* term, int mulop, struct ASTNode* factor)
+struct ASTNode *newTerm(struct ASTNode *term, int mulop, struct ASTNode *factor)
 {
-     struct ASTNode* root = newASTNode(EXP_AST);
+     struct ASTNode *root = newASTNode(EXP_AST);
      root->child[0] = term;
      root->child[1] = factor;
      root->attr.op = mulop;
      return root;
 }
-struct ASTNode* newTermFactor(struct ASTNode* factor)
+struct ASTNode *newTermFactor(struct ASTNode *factor)
 {
      return factor;
 }
 
-struct ASTNode* newCall(char* ID, struct ASTNode* args)
+struct ASTNode *newCall(char *ID, struct ASTNode *args)
 {
-     struct ASTNode* root = newASTNode(CALLSTMT_AST);
+     struct ASTNode *root = newASTNode(CALLSTMT_AST);
      root->child[0] = newIDNode(ID);
      root->child[1] = args;
      return root;
 }
-struct ASTNode* newArgs(struct ASTNode* argList)
+struct ASTNode *newArgs(struct ASTNode *argList)
 {
      return argList;
 }
-struct ASTNode* newArgList(struct ASTNode* argList, struct ASTNode* expression)
+struct ASTNode *newArgList(struct ASTNode *argList, struct ASTNode *expression)
 {
-     struct ASTNode* node = argList;
-     while(node->sibling != NULL)
+     struct ASTNode *node = argList;
+     while (node->sibling != NULL)
           node = node->sibling;
      node->sibling = expression;
      return argList;
 }
-struct ASTNode* newASTNode(ASTType type)
+struct ASTNode *newASTNode(ASTType type)
 {
-     struct ASTNode* node = (struct ASTNode*)malloc(sizeof(struct ASTNode));
+     struct ASTNode *node = (struct ASTNode *)malloc(sizeof(struct ASTNode));
      node->child[0] = NULL;
      node->child[1] = NULL;
      node->child[2] = NULL;
@@ -282,23 +282,23 @@ struct ASTNode* newASTNode(ASTType type)
      node->astType = type;
      return node;
 }
-struct ASTNode* newIDNode(char* ID)
+struct ASTNode *newIDNode(char *ID)
 {
-     struct ASTNode* root = newASTNode(ID_AST);
+     struct ASTNode *root = newASTNode(ID_AST);
      root->attr.name = strdup(ID);
      return root;
 }
-struct ASTNode* newNumNode(int num)
+struct ASTNode *newNumNode(int num)
 {
-     struct ASTNode* root = newNumNode(NUM_AST);
+     struct ASTNode *root = newNumNode(NUM_AST);
      root->attr.value = num;
      return root;
 }
-void printNodeKind(struct ASTNode* node)
+void printNodeKind(struct ASTNode *node)
 {
-     if(node == NULL)
-           return;
-     switch(node->astType)
+     if (node == NULL)
+          return;
+     switch (node->astType)
      {
      case VARDEC_AST:
           printf("Var declaration.\n");
@@ -368,21 +368,21 @@ void printNodeKind(struct ASTNode* node)
           break;
      }
 }
-void printAST(struct ASTNode* root, int indent)
+void printAST(struct ASTNode *root, int indent)
 {
-     struct ASTNode* node = root;
+     struct ASTNode *node = root;
      int i;
-     while(node != NULL)
+     while (node != NULL)
      {
-          for (i = 0; i<indent; ++i)
+          for (i = 0; i < indent; ++i)
           {
                printf(" ");
           }
           printNodeKind(node);
-          printAST(node->child[0], indent+4);
-          printAST(node->child[1], indent+4);
-          printAST(node->child[2], indent+4); 
-          printAST(node->child[3], indent+4);         
+          printAST(node->child[0], indent + 4);
+          printAST(node->child[1], indent + 4);
+          printAST(node->child[2], indent + 4);
+          printAST(node->child[3], indent + 4);
           node = node->sibling;
      }
 }
