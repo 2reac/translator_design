@@ -1,8 +1,11 @@
 %{
-#include<stdio.h>
+#include <stdio.h>
 #include <stdlib.h>
+#include "global.h"
+#include "AST.h"
 #define YY_DECL int yylex()
 extern int yylineno;
+extern char* yytext;
 %}
 
 %token IF 
@@ -11,8 +14,9 @@ extern int yylineno;
 %token INT
 %token VOID
 %token WHILE
-%token IDENTIFIER
-%token NUM
+%token <name>IDENTIFIER
+%token <value>NUM
+
 %token Op_lessequal
 %token Op_greaterequal
 %token Op_equal
@@ -33,128 +37,138 @@ extern int yylineno;
 %token Op_assign
 %token Semicolon
 %token Comma
-%token Eps
 
-%% /* Grammar rules and actions follow */
+%type <node> program declaration_list declaration var_declaration type_specifier fun_declaration 
+%type <node> params param_list param compound_stmt local_declarations statement_list statement
+%type <node> expression_stmt selection_stmt iteration_stmt return_stmt expression var
+%type <node> simple_expression additive_expression term factor call args arg_list
+%type <value> relop addop mulop
 
-program: declaration_list {printf("program\n");}
-	   ;
-		  
-expression_stmt : expression Semicolon {printf("expression_stmt\n");}
-			   | Semicolon {printf("expression_stmt\n");}
-			   ;
-			
-selection_stmt : IF LeftPrnts statement RightPrnts {printf("selection_stmt\n");}
-			   | IF LeftPrnts expression RightPrnts statement ELSE statement {printf("selection_stmt\n");}
-			   ;
-			   
-iteration_stmt : WHILE LeftPrnts expression RightPrnts statement {printf("iteration_stmt\n");}
-			   ;
+%union{
+     char* name;                /* terminal token: for symbol's name */
+     int value;                 /* terminal token: for number */
+     struct ASTNode* node;      /* unterminal token: abstract syntax tree node */
+ }
 
-declaration_list: declaration declaration_list {printf("declaration_list\n");}
-                | declaration {printf("declaration_list\n");}
-				;
-				
-declaration : fun_declaration {printf("declaration\n");}
-            | var_declaration {printf("declaration\n");}
-            ;
+%%
+program: declaration_list				{ASTRoot = newProgram($1);}
+;
 
-var_declaration : type_specifier IDENTIFIER Semicolon
-				| type_specifier IDENTIFIER LeftBrack NUM RightBrack {printf("var_declaration\n");}
-                ;
+ declaration_list: declaration_list declaration  {$$ = newDecList($1, $2);}
+| declaration							{$$ = newDecList(NULL, $1);}
+;
 
-type_specifier : INT {printf("type\n");}
-				| VOID {printf("type\n");}
-				;
+declaration: var_declaration			{$$ = newDec($1, 0);}
+| fun_declaration						{$$ = newDec($1, 1);}
+;
 
-fun_declaration : type_specifier IDENTIFIER LeftPrnts params RightPrnts compound_stmt {printf("fun_declaration\n");}
-                ;
-				
-params : params_list {printf("params\n");}
-	   | VOID {printf("params\n");}
-	   ;
-	   
-params_list : params_list Comma param {printf("params_list\n");}
-			| param {printf("params_list\n");}
-			;
-			
-param : type_specifier IDENTIFIER {printf("param\n");}
-	  | type_specifier IDENTIFIER LeftBrack RightBrack {printf("param\n");}
-	  ;
-	  
-compound_stmt : LeftBrace local_declarations statement_list RightBrace {printf("compound_stmt\n");}
-			  ;
-			  
-local_declarations : local_declarations var_declaration {printf("local_declarations\n");}
-				   | Eps {printf("local_declarations\n");}
-				   ;
-				   
-statement_list : statement_list statement {printf("statement_list\n");}
-			   | Eps {printf("statement_list\n");}
-			   ;
-			   
-statement : expression_stmt {printf("statement\n");}
-		  | compound_stmt {printf("statement\n");}
-		  | selection_stmt {printf("statement\n");}
-		  | iteration_stmt {printf("statement\n");}
-		  | return_stmt {printf("statement\n");}
-		  ;
-		  
-return_stmt : RETURN Semicolon {printf("return_stmt\n");}
-			| RETURN expression {printf("return_stmt\n");}
-			;
-			
-expression : var Op_equal expression {printf("expression\n");}
-		   | simple_expression {printf("expression\n");}
-		   ;
-		   
-var : IDENTIFIER {printf("var\n");}
-	| IDENTIFIER LeftBrack expression RightBrack {printf("var\n");}
-	;
-	
-simple_expression : additive_expression relop additive_expression {printf("simple_expression\n");}
-				  | additive_expression {printf("simple_expression\n");}
-				  ;
-				
-relop : Op_lessequal {printf("relop\n");}
-	  | Op_less {printf("relop\n");}
-	  | Op_greater {printf("relop\n");}
-	  | Op_greaterequal {printf("relop\n");}
-	  | Op_equal {printf("relop\n");}
-	  | Op_notequal {printf("relop\n");}
-	  ;
+var_declaration: type_specifier IDENTIFIER Semicolon 				{$$ = newVarDec($1, $2);}
+| type_specifier IDENTIFIER LeftBrack NUM RightBrack Semicolon		{$$ = newArrayDec($1, $2, $4);}
+;
 
-additive_expression : additive_expression addop term {printf("additive_expression\n");}
-					| term {printf("additive_expression\n");}
-					;
-					
-addop : Op_add {printf("addop\n");}
-	  | Op_subtract {printf("addop\n");}
-	  ;
-	  
-term : term mulop factor {printf("term\n");}
-	 | factor {printf("term\n");}
-	 ;
-	 
-mulop : Op_multiply {printf("mulop\n");}
-	  | Op_divide {printf("mulop\n");}
-	  ;
-	  
-factor : LeftPrnts expression RightPrnts {printf("factor\n");}
-	   | var {printf("factor\n");}
-	   | call {printf("factor\n");}
-	   | NUM {printf("factor\n");}
-	   ;
-	   
-call : IDENTIFIER LeftPrnts args RightPrnts {printf("call\n");}
-	 ;
-	 
-args : args_list {printf("args\n");}
-	 | Eps {printf("args\n");}
-	 ;
-	 
-args_list : args_list Comma expression {printf("args_list\n");}
-		  | expression {printf("args_list\n");}
-		  ;
-	  
+type_specifier: INT				{$$ = newTypeSpe(TYPE_INTEGER);}
+| VOID							{$$ = newTypeSpe(TYPE_VOID);}
+;
+
+fun_declaration: type_specifier IDENTIFIER LeftPrnts params RightPrnts compound_stmt {$$ = newFunDec($1, $2, $4, $6);}
+;
+
+params: param_list				{$$ = newParams($1);}
+| VOID							{$$ = newParams(NULL);}
+;
+
+param_list: param_list Semicolon param		{$$ = newParamList($1, $3);}
+| param								{$$ = newParamList(NULL, $1);}
+;
+
+param: type_specifier IDENTIFIER							{$$ = newParam($1, $2, 0);}
+| type_specifier IDENTIFIER LeftBrack RightBrack			{$$ = newParam($1, $2, 1);}
+;
+
+compound_stmt: LeftBrace local_declarations statement_list RightBrace	{$$ = newCompound($2, $3);}
+;
+
+local_declarations: local_declarations var_declaration	{$$ = newLocalDecs($1, $2);}
+| 									{$$ = NULL;}
+;
+
+statement_list: statement_list statement	{$$ = newStmtList($1, $2);}
+| 									{$$ = NULL;}
+;
+
+statement: expression_stmt			{$$ = newStmt($1);}
+| compound_stmt						{$$ = newStmt($1);}
+| selection_stmt					{$$ = newStmt($1);}
+| iteration_stmt					{$$ = newStmt($1);}
+| return_stmt						{$$ = newStmt($1);}
+;
+
+expression_stmt: expression Semicolon		{$$ = newExpStmt($1);}
+| Semicolon									{$$ = NULL;}
+;
+
+selection_stmt: IF LeftPrnts expression RightPrnts statement		{$$ = newSelectStmt($3,$5,NULL);}
+| IF LeftPrnts expression RightPrnts statement ELSE statement		{$$ = newSelectStmt($3,$5,$7);}
+;
+
+iteration_stmt: WHILE LeftPrnts expression RightPrnts statement 	{$$ = newIterStmt($3, $5);}
+;
+
+return_stmt: RETURN Semicolon			{$$ = newRetStmt(NULL);}
+| RETURN expression Semicolon			{$$ = newRetStmt($2);}
+;
+
+expression: var Op_assign expression		{$$ = newAssignExp($1, $3);}
+| simple_expression							{$$ = newExpression($1);}
+;
+
+var: IDENTIFIER												{$$ = newVar($1);}
+| IDENTIFIER LeftBrack expression RightBrack				{$$ = newArrayVar($1, $3);}
+;
+
+simple_expression: additive_expression relop additive_expression	{$$ = newSimpExp($1, $2, $3);}
+| additive_expression					{$$ = newSimpExp($1, -1, NULL);}
+;
+
+relop: Op_greater						{$$ = Op_greater;}
+| Op_less								{$$ = Op_less;}
+| Op_greaterequal						{$$ = Op_greaterequal;}
+| Op_lessequal							{$$ = Op_lessequal;}
+| Op_equal								{$$ = Op_equal;}
+| Op_notequal							{$$ = Op_notequal;}
+;
+
+additive_expression: additive_expression addop term	{$$ = newAddExp($1, $2, $3);}
+| term									{$$ = $1;}
+;
+
+addop: Op_add							{$$ = Op_add;}
+| Op_subtract							{$$ = Op_subtract;}
+;
+
+term: term mulop factor					{$$ = newTerm($1, $2, $3);}
+| factor								{$$ = $1;}
+;
+
+mulop: Op_multiply						{$$ = Op_multiply;}
+| Op_divide								{$$ = Op_divide;}
+;
+
+factor: LeftPrnts expression RightPrnts 		{$$ = newTermFactor($2);}
+| var											{$$ = newTermFactor($1);}
+| call											{$$ = newTermFactor($1);}
+| NUM											{$$ = newTermFactor(newNumNode($1));}
+;
+
+call: IDENTIFIER LeftPrnts args RightPrnts		{$$ = newCall($1, $3);}
+;
+
+args: arg_list							{$$ = newArgs($1);}
+| 										{$$ = NULL;}
+;
+
+arg_list: arg_list Comma expression		{$$ = newArgList($1, $3);}
+| expression							{$$ = $1;}
+;
+
 %%

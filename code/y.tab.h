@@ -66,8 +66,7 @@
      Op_greater = 282,
      Op_assign = 283,
      Semicolon = 284,
-     Comma = 285,
-     Eps = 286
+     Comma = 285
    };
 #endif
 /* Tokens.  */
@@ -99,13 +98,26 @@
 #define Op_assign 283
 #define Semicolon 284
 #define Comma 285
-#define Eps 286
 
 
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
-typedef int YYSTYPE;
+typedef union YYSTYPE
+{
+
+/* Line 1676 of yacc.c  */
+#line 47 "bison.y"
+
+     char* name;                /* terminal token: for symbol's name */
+     int value;                 /* terminal token: for number */
+     struct ASTNode* node;      /* unterminal token: abstract syntax tree node */
+ 
+
+
+/* Line 1676 of yacc.c  */
+#line 120 "y.tab.h"
+} YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
